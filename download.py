@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 import yt_dlp as youtube_dl
 import os
 import time
-import os
 import shutil
 
 MAX_FILE_SIZE = 25 * 1024 * 1024  # 25 MB
@@ -10,6 +9,18 @@ LARGER_MAX_FILE_SIZE = 225 * 1024 * 1024  # 250 MB, around a 3 hour audio file m
 FILE_TOO_LARGE_MESSAGE = "The audio file is too large for the current size and rate limits using Whisper. If you used a YouTube link, please try a shorter video clip. If you uploaded an audio file, try trimming or compressing the audio to under 25 MB."
 max_retries = 3
 delay = 2
+
+
+def _extract_filesize_bytes(info):
+    filesize = info.get("filesize")
+    if filesize is None:
+        filesize = info.get("filesize_approx")
+    if filesize is None:
+        return 0
+    try:
+        return int(filesize)
+    except (TypeError, ValueError):
+        return 0
 
 
 class MyLogger(object):
@@ -57,7 +68,7 @@ def download_video_audio(url, external_logger=lambda x: None):
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 print("Going to download ", url)
                 info = ydl.extract_info(url, download=False)
-                filesize = info.get("filesize", 0)
+                filesize = _extract_filesize_bytes(info)
                 if filesize > MAX_FILE_SIZE:
                     if filesize > LARGER_MAX_FILE_SIZE:
                     # raise error we are not transcribing any video over 3 hours
