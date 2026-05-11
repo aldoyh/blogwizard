@@ -41,6 +41,8 @@ class DownloadTests(unittest.TestCase):
     def test_extract_filesize_returns_zero_for_invalid(self):
         size = download._extract_filesize_bytes({"filesize": "invalid"})
         self.assertEqual(size, 0)
+        size = download._extract_filesize_bytes({"filesize": {"bytes": 123}})
+        self.assertEqual(size, 0)
 
     @patch.object(download.youtube_dl, "YoutubeDL")
     def test_download_returns_mp3_when_filesize_unknown(self, youtube_dl_cls):
