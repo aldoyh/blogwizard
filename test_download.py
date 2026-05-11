@@ -55,8 +55,7 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(result, "/tmp/audio/example.mp3")
 
     @patch.object(download.youtube_dl, "YoutubeDL")
-    @patch("download.time.sleep")
-    def test_download_raises_for_very_large_file(self, mock_sleep, youtube_dl_cls):
+    def test_download_raises_for_very_large_file(self, youtube_dl_cls):
         client = FakeYoutubeDL({})
         client._info = {"filesize": download.LARGER_MAX_FILE_SIZE + 1, "title": "example", "ext": "webm"}
         youtube_dl_cls.return_value = client

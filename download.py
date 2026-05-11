@@ -71,7 +71,7 @@ def download_video_audio(url, external_logger=lambda x: None):
                 filesize = _extract_filesize_bytes(info)
                 if filesize > MAX_FILE_SIZE:
                     if filesize > LARGER_MAX_FILE_SIZE:
-                    # raise error we are not transcribing any video over 3 hours
+                    # Reject files above the larger byte-size threshold.
                         raise Exception(FILE_TOO_LARGE_MESSAGE)
                     else:
                         print("Only the first 19 minutes of the file will be summarized.")
