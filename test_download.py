@@ -42,7 +42,7 @@ class DownloadTests(unittest.TestCase):
         size = download._extract_filesize_bytes({"filesize": "invalid"})
         self.assertEqual(size, 0)
 
-    @patch("download.youtube_dl.YoutubeDL")
+    @patch.object(download.youtube_dl, "YoutubeDL")
     def test_download_returns_mp3_when_filesize_unknown(self, youtube_dl_cls):
         client = FakeYoutubeDL({})
         client._info = {"filesize": None, "title": "example", "ext": "webm"}
@@ -52,7 +52,7 @@ class DownloadTests(unittest.TestCase):
 
         self.assertEqual(result, "/tmp/audio/example.mp3")
 
-    @patch("download.youtube_dl.YoutubeDL")
+    @patch.object(download.youtube_dl, "YoutubeDL")
     @patch("download.time.sleep")
     def test_download_raises_for_very_large_file(self, mock_sleep, youtube_dl_cls):
         client = FakeYoutubeDL({})
